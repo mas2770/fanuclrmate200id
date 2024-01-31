@@ -67,27 +67,18 @@ class MoveGroupPythonInterfaceTutorial(object):
         move_group = moveit_commander.MoveGroupCommander(group_name)
         group_name_gripper = "hand_group"
         move_group_gripper = moveit_commander.MoveGroupCommander(group_name_gripper)
-        # pose_stamped = move_group_gripper.get_named_target_values('open')
-        # pose_stamped1 = move_group.get_named_target_values('home')
-        # print(pose_stamped,pose_stamped1)
+        
         display_trajectory_publisher = rospy.Publisher(
             "/move_group/display_planned_path",
             moveit_msgs.msg.DisplayTrajectory,
             queue_size=10,
         )
         planning_frame = move_group.get_planning_frame()
-        # print("============ Planning frame: %s" % planning_frame)
 
         eef_link = move_group.get_end_effector_link()
-        # print("============ End effector link: %s" % eef_link)
 
         group_names = robot.get_group_names()
-        # print("============ Available Planning Groups:", robot.get_group_names())
 
-
-        # print("============ Printing robot state")
-        # print(robot.get_current_state())
-        # print("")
         self.move_group_gripper = move_group_gripper
         self.box_name = ""
         self.robot = robot
@@ -105,20 +96,19 @@ class MoveGroupPythonInterfaceTutorial(object):
 
 
         joint_goal = move_group.get_current_joint_values()
-        # print(joint_goal)
         joint_goal[0] = -pi / 3
         joint_goal[1] = -pi / 2
         joint_goal[2] = pi / 2
         joint_goal[3] = -pi / 2
         joint_goal[4] = pi / 2
-        joint_goal[5] = pi  # 1/6 of a turn
+        joint_goal[5] = pi
 
         move_group.go(joint_goal, wait=True)
 
         move_group.stop()
 
         current_joints = move_group.get_current_joint_values()
-        # print(move_group.get_current_state())
+
         return all_close(joint_goal, current_joints, 0.01)
 
     def go_to_pose_goal(self, x_length,y_length, z_length=0.2):
@@ -360,105 +350,14 @@ def main():
         tutorial.detach_box(3)
         tutorial.home()
 
-
-
-        # tutorial.go_to_pose_goal(0.4,0.5,0.1)
-        # tutorial.add_box(2,0.4,0.4,0.09)
-        # tutorial.add_box(3,0.3,0.3,0.09)
-        # tutorial.attach_box(str(1))
-        # spawn_square_model()
-        # tutorial.open_close("open")
-        # tutorial.open_close("close")
-        # tutorial.go_to_pose_goal(0.5,-0.5)
-        # tutorial.detach_box(str(1))
         # tutorial.go_to_joint_state()
-        # tutorial.open_close()
-        # tutorial.go_to_pose_goal(0.4,0.4,0.3)
-        # tutorial.go_to_pose_goal(0.4,0.4,0.1)
-        # result = move_gripper(0.08, 1.0)
-        # tutorial.go_to_pose_goal(0.5,0.5,0.3)
-        # while(True and not rospy.is_shutdown()):
-        #     # x1 = random.randint(3, 6)/10
-        #     # y1 = random.randint(3, 6)/10   
-        # tutorial.go_to_pose_goal(0.3,0.3,0.3)
-        #     # result = move_gripper(0.08, 1.0)
-        #     tutorial.go_to_pose_goal(0.5,0.5)
-        # tutorial.add_box(2)
-        # #     # result = move_gripper(0.05, 1.0)
-        # #     tutorial.attach_box(1)
-        #     tutorial.go_to_pose_goal(0.5,0.0,0.3)
-        #     tutorial.go_to_pose_goal(0.5, -0.5, 0.3)
-        #     tutorial.go_to_pose_goal(0.5, -0.5)
-        #     tutorial.go_to_pose_goal(0.5,0.0,0.3)
-        # result = move_gripper(0.08, 1.0)
-        # result = move_gripper(0.005, 1.0)
-        #     tutorial.detach_box(1)
-        #     tutorial.remove_box(1)
-        # tutorial.go_to_pose_goal(0.4,0.4,0.2)
-        # tutorial.attach_box(str(2))
-        # tutorial.go_to_pose_goal(0.4,-0.4)
-        # tutorial.detach_box(str(2))
-        # tutorial.f()
-        # tutorial.go_to_pose_goal(0.3,0.3,0.3)
-        # tutorial.attach_box(str(3))
-        # tutorial.go_to_pose_goal(0.4,-0.4,0.1)
-        # tutorial.detach_box(str(3))
+
+        # tutorial.remove_box(i)
         
-        # tutorial.go_to_joint_state()
-        # tutorial.f()
-        # i=0
-        # while(i<100):
-        #     tutorial.go_to_pose_goal(random.randint(3, 6)/10, random.randint(3, 6)/10)
-        #     tutorial.add_box(i)
-        #     tutorial.attach_box(i)
-        #     tutorial.go_to_pose_goal(random.randint(3, 6)/10, random.randint(-6, -3)/10)
-        #     tutorial.detach_box(i)
-        #     tutorial.remove_box(i)
-        #     i+=1
-        # for i in range(3):
-        #     tutorial.go_to_pose_goal(random.randint(2, 7)/10, random.randint(2, 7)/10)
-        #     tutorial.add_box(i)
-        #     tutorial.attach_box(i)
-        #     tutorial.go_to_pose_goal(random.randint(2, 7)/10, random.randint(-7, -2)/10)
-        #     tutorial.detach_box(i)
-        # tutorial.go_to_joint_state()
-        # tutorial.remove_box(0)
-        # tutorial.remove_box(1)
-        # tutorial.remove_box(2)
-
-        # tutorial.remove_box()
-        # input("============ Press `Enter` to plan and display a Cartesian path ...")
-        # cartesian_plan, fraction = tutorial.plan_cartesian_path()
-
-        # # input(
-        # #     "============ Press `Enter` to display a saved trajectory (this will replay the Cartesian path)  ..."
-        # # )
+        # cartesian_plan, fraction = tutorial.plan_cartesian_path(scale=1)
         # tutorial.display_trajectory(cartesian_plan)
-
-        # # input("============ Press `Enter` to execute a saved path ...")
         # tutorial.execute_plan(cartesian_plan)
 
-        # input("============ Press `Enter` to add a box to the planning scene ...")
-        
-
-        # input("============ Press `Enter` to attach a Box to the Panda robot ...")
-        
-
-        # input(
-        #     "============ Press `Enter` to plan and execute a path with an attached collision object ..."
-        # )
-        # cartesian_plan, fraction = tutorial.plan_cartesian_path(scale=-1)
-        # tutorial.execute_plan(cartesian_plan)
-
-        # input("============ Press `Enter` to detach the box from the Panda robot ...")
-        
-
-        # input(
-        #     "============ Press `Enter` to remove the box from the planning scene ..."
-        # )
-        # tutorial.remove_box()
-
-        # print("============ Python tutorial demo complete!")
     except rospy.ROSInterruptException:
         return
     except KeyboardInterrupt:
